@@ -3,6 +3,8 @@ from rich import print
 from weather import GetWeatherData
 from rich.table import Table
 from rich.console import Console
+from news import GetNewsData
+
 
 app = typer.Typer(help="This is a CLI Desktop Assistant. I hope you will like it!")
 console = Console()
@@ -26,6 +28,21 @@ def weather(
     table.add_row("description", weather_data.get_data().desc)
     table.add_row("wind speed", f"{weather_data.get_data().wind_speed} m/s")
     table.add_row("pressure", f"{weather_data.get_data().pressure} hPa")
+    console.print(table)
+
+
+@app.command()
+def news(
+        country_code: str = typer.Option(..., help="Country code"),
+):
+    news_data = GetNewsData(country_code)
+    table = Table("tite", "author", "url")
+    for x in news_data.get_news():
+        table.add_row(
+            x.title,
+            x.author,
+            x.url
+        )
     console.print(table)
 
 

@@ -9,6 +9,9 @@ load_dotenv()
 
 @dataclass
 class WeatherData:
+    """
+    Dataclass for weather data
+    """
     temp: float
     desc: str
     pressure: int
@@ -16,12 +19,19 @@ class WeatherData:
 
 
 class GetWeatherData:
+    """
+    Class for getting weather data
+    """
     def __init__(self, city: str):
         self.city = city
         self.api_key = os.getenv("WEATHER_API_KEY")
         self.url = f"https://api.openweathermap.org/data/2.5/weather?q={self.city}&appid={self.api_key}&units=metric"
 
     def get_data(self) -> WeatherData:
+        """
+        Returns weather data
+        Get data from API and parse it to JSON format
+        """
         response = get(self.url)
         data = json.loads(response.text)
 

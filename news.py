@@ -10,6 +10,9 @@ load_dotenv()
 
 @dataclass
 class NewsData:
+    """
+    Dataclass for news data
+    """
     title: str
     author: str
     url: str

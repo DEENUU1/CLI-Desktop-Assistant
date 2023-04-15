@@ -19,7 +19,7 @@ class GetWeatherData:
     def __init__(self, city: str):
         self.city = city
         self.api_key = os.getenv("WEATHER_API_KEY")
-        self.url = f"https://api.openweathermap.org/data/2.5/weather?q={self.city}&appid={self.api_key}"
+        self.url = f"https://api.openweathermap.org/data/2.5/weather?q={self.city}&appid={self.api_key}&units=metric"
 
     def get_data(self) -> WeatherData:
         response = get(self.url)

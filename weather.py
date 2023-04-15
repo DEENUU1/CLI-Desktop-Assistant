@@ -33,6 +33,9 @@ class GetWeatherData:
         Get data from API and parse it to JSON format
         """
         response = get(self.url)
+        # handle error if city not found
+        if response.status_code == 404:
+            return None
         data = json.loads(response.text)
 
         temp = data["main"]["temp"]

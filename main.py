@@ -22,7 +22,9 @@ def weather(
 ):
     weather_data = GetWeatherData(city)
     print(f"Right now in {city} is...")
-
+    if weather_data.get_data() is None:
+        print("[red]No data found![/red] :cry:")
+        return
     table = Table("name", "value")
     table.add_row("temperature", f"{weather_data.get_data().temp} °C")
     table.add_row("description", weather_data.get_data().desc)
@@ -37,6 +39,9 @@ def news(
 ):
     news_data = GetNewsData(country_code)
     table = Table("tite", "author", "url")
+    if len(news_data.get_news()) == 0:
+        print("[red]No news found![/red] :cry:")
+        return
     for x in news_data.get_news():
         table.add_row(
             x.title,

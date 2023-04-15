@@ -26,6 +26,8 @@ class GetNewsData:
 
     def get_news(self):
         result = get(self.url)
+        if result.status_code == 200:
+            raise Exception("Something went wrong")
         result_json = json.loads(result.content)
         articles = result_json["articles"]
         all_articles = []

@@ -17,7 +17,9 @@ app = typer.Typer(
 console = Console()
 
 
-@app.command()
+@app.command(
+    help="Returns a current weather in a given city"
+)
 def weather(
         city: str = typer.Option(..., help="City name"),
 ):
@@ -26,7 +28,9 @@ def weather(
     console.print(weather_data.return_data())
 
 
-@app.command()
+@app.command(
+    help="Returns a news in a given country"
+)
 def news(
         country_code: str = typer.Option(..., help="Country code"),
 ):
@@ -34,7 +38,9 @@ def news(
     console.print(news_data.return_news())
 
 
-@app.command()
+@app.command(
+    help="Returns a currency exchange rate"
+)
 def currency(
         currency_code: str = typer.Option(..., help="Currency code"),
 ):
@@ -42,7 +48,9 @@ def currency(
     console.print(currency_data.return_exchange_rate())
 
 
-@app.command()
+@app.command(
+    help="Returns a movie and tv series recommendation"
+)
 def show(
         title: str = typer.Option(..., help="Movie title"),
         show_type: str = typer.Option(..., help="Show type"),

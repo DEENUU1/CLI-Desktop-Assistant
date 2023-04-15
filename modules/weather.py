@@ -47,14 +47,13 @@ class GetWeatherData:
 
         return WeatherData(temp, desc, pressure, wind_speed)
 
-    def return_data(self) -> Table | None:
+    def return_data(self) -> Table | str:
         """
         Returns weather data
         Get data from API and parse it to JSON format
         """
         if self.get_data() is None:
-            print("[red]No data found![/red] :cry:")
-            return
+            return "Invalid city name. Please try again"
         table = Table("name", "value")
         table.add_row("temperature", f"{self.get_data().temp} °C")
         table.add_row("description", self.get_data().desc)

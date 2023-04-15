@@ -1,9 +1,9 @@
 import typer
 from rich import print
-from weather import GetWeatherData
+from modules.weather import GetWeatherData
 from rich.console import Console
-from news import GetNewsData
-from exchange import GetExchangeRates
+from modules.news import GetNewsData
+from modules.exchange import GetExchangeRates
 
 app = typer.Typer(
     name="Desktop Assistant CLI",
@@ -31,6 +31,7 @@ def news(
 ):
     news_data = GetNewsData(country_code)
     console.print(news_data.return_news())
+
 
 @app.command()
 def currency(

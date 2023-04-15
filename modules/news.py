@@ -5,6 +5,7 @@ import json
 from dataclasses import dataclass
 from rich.console import Console
 from rich.table import Table
+
 load_dotenv()
 
 console = Console()
@@ -47,14 +48,14 @@ class GetNewsData:
         return all_articles
 
     def return_news(self):
-        if self.get_news() is None:
-            print("[red]No data found![/red] :cry:")
-            return
-        table = Table("tite", "author", "url")
-        for x in self.get_news():
-            table.add_row(
-                x.title,
-                x.author,
-                x.url
-            )
-        return table
+        if self.get_news() is not None:
+            table = Table("tite", "author", "url")
+            for x in self.get_news():
+                table.add_row(
+                    x.title,
+                    x.author,
+                    x.url
+                )
+            return table
+        else:
+            return "Invalid country code"

@@ -4,6 +4,7 @@ from modules.weather import GetWeatherData
 from rich.console import Console
 from modules.news import GetNewsData
 from modules.exchange import GetExchangeRates
+from modules.movies import RecommendationShows
 
 app = typer.Typer(
     name="Desktop Assistant CLI",
@@ -39,6 +40,15 @@ def currency(
 ):
     currency_data = GetExchangeRates(currency_code)
     console.print(currency_data.return_exchange_rate())
+
+
+@app.command()
+def show(
+        title: str = typer.Option(..., help="Movie title"),
+        show_type: str = typer.Option(..., help="Show type"),
+):
+    show_data = RecommendationShows(title, show_type)
+    console.print(show_data.return_show_data())
 
 
 if __name__ == "__main__":

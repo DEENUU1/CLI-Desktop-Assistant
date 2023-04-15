@@ -14,7 +14,7 @@ class MovieData:
     id: int
     title: str
     poster: str
-    overview: str
+    release_date: str
 
 
 class Search:
@@ -31,7 +31,7 @@ class Search:
         return '-'.join(query_list)
 
     @property
-    def return_id(self) -> Union[str, None]:
+    def _return_id(self) -> Union[str, None]:
         """ This method returns user movie ID """
         base_url = f"https://api.themoviedb.org/3/search/{self.type}?api_key="
         result = get(base_url + self.__api_key + "&query=" + self._create_query())
@@ -48,25 +48,32 @@ class Search:
 
 
 class RecommendationShows:
-    """ This class alows to return similar movies and tv shows from the API """
+    """
+    This class allows to return similar movies and tv shows from the API
+    """
+
     def __init__(self, query: str, show_type: str):
         self.search = Search(query, show_type)
         self.type = show_type
-        self.__api_key = os.getenv("MOVIEDB_API_KEY")
+        self.__api_key = os.getenv("MOVIE_API_KEY")
         self.base_url = "https://api.themoviedb.org/3/"
 
-    def _search_for_similar(self) -> List[Dict[str, Any]]:
-        """ This method is searching for similar tv shows or movies """
+    def _search_for_similar(self) -> List[Dict[str, Any]] | None:
+        """
+        This method is searching for similar tv shows or movies
+        """
         all_results = []
         response = get(
-            f"{self.base_url}{self.type}/{self.search.return_id}/recommendations?api_key={self.__api_key}"
+            f"{self.base_url}{self.type}/{self.search._return_id}/recommendations?api_key={self.__api_key}"
         )
+        if response.status_code != 200:
+            return None
         json_result = json.loads(response.content)
         all_results.extend(json_result['results'])
 
         return all_results
 
-    def get_similar_shows(self) -> list[MovieData]:
+    def _get_similar_shows(self) -> list[MovieData]:
         """
         This method returns title, overview, photo for all similar movies and tv shows
         """
@@ -76,9 +83,9 @@ class RecommendationShows:
             for movie in self._search_for_similar():
                 shows_data = MovieData(
                     title=movie['title'],
-                    overview=movie['overview'],
                     poster=movie['poster_path'],
-                    id=movie['id']
+                    id=movie['id'],
+                    release_date=movie['release_date']
                 )
                 all_movies.append(shows_data)
             return all_movies
@@ -88,10 +95,22 @@ class RecommendationShows:
             for show in self._search_for_similar():
                 show_data = MovieData(
                     title=show['name'],
-                    overview=show['overview'],
                     poster=show['backdrop_path'],
-                    id=show['id']
+                    id=show['id'],
+                    release_date=show['first_air_date']
                 )
                 all_tv_shows.append(show_data)
             return all_tv_shows
 
+    def return_show_data(self):
+        if self._get_similar_shows() is not None:
+            table = Table("title", "release_date", "poster")
+            for data in self._get_similar_shows():
+                table.add_row(
+                    data.title,
+                    data.release_date,
+                    f"https://image.tmdb.org/t/p/original{data.poster}"
+                )
+            return table
+        else:
+            return "Invalid movie title"

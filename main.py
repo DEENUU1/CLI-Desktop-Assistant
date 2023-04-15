@@ -1,19 +1,19 @@
 import typer
 from rich import print
 from weather import GetWeatherData
-from rich.table import Table
 from rich.console import Console
 from news import GetNewsData
 
 
-app = typer.Typer(help="This is a CLI Desktop Assistant. I hope you will like it!")
+app = typer.Typer(
+    name="Desktop Assistant CLI",
+    add_completion=False,
+    rich_markup_mode="rich",
+    help="📕[bold green] Welcome in CLI Desktop Assistant. CLI.[/bold green]"
+         "This is a CLI Desktop Assistant made with Typer",
+)
+
 console = Console()
-
-
-@app.command()
-def main():
-    print("[green]Welcome in CLI Desktop Assistant.[/green]")
-    print("This is an opensource project made with Typer :rocket:")
 
 
 @app.command()
@@ -22,15 +22,7 @@ def weather(
 ):
     weather_data = GetWeatherData(city)
     print(f"Right now in {city} is...")
-    if weather_data.get_data() is None:
-        print("[red]No data found![/red] :cry:")
-        return
-    table = Table("name", "value")
-    table.add_row("temperature", f"{weather_data.get_data().temp} °C")
-    table.add_row("description", weather_data.get_data().desc)
-    table.add_row("wind speed", f"{weather_data.get_data().wind_speed} m/s")
-    table.add_row("pressure", f"{weather_data.get_data().pressure} hPa")
-    console.print(table)
+    console.print(weather_data.return_data())
 
 
 @app.command()
@@ -38,17 +30,7 @@ def news(
         country_code: str = typer.Option(..., help="Country code"),
 ):
     news_data = GetNewsData(country_code)
-    table = Table("tite", "author", "url")
-    if len(news_data.get_news()) == 0:
-        print("[red]No news found![/red] :cry:")
-        return
-    for x in news_data.get_news():
-        table.add_row(
-            x.title,
-            x.author,
-            x.url
-        )
-    console.print(table)
+    console.print(news_data.return_news())
 
 
 if __name__ == "__main__":

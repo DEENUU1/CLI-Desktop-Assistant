@@ -5,6 +5,7 @@ from rich.console import Console
 from modules.news import GetNewsData
 from modules.exchange import GetExchangeRates
 from modules.movies import RecommendationShows, MovieTrailers, Search
+from modules.quotes import RandomQuotes
 
 
 app = typer.Typer(
@@ -67,6 +68,13 @@ def show_id(
 ):
     show_data = Search(title, show_type)
     console.print(show_data._return_id)
+
+
+@app.command(help="Returns a random quote")
+def quote():
+    quote_data = RandomQuotes()
+    console.print(f'"{quote_data.return_random_quote()[0]}"',
+                  "~~", quote_data.return_random_quote()[1] )
 
 
 

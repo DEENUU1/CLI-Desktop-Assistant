@@ -3,9 +3,12 @@ import os
 from requests import get
 import json
 from dataclasses import dataclass
-
+from rich.console import Console
+from rich.table import Table
 
 load_dotenv()
+
+console = Console()
 
 
 @dataclass
@@ -26,8 +29,8 @@ class GetNewsData:
 
     def get_news(self):
         result = get(self.url)
-        if result.status_code == 200:
-            raise Exception("Something went wrong")
+        if result.status_code != 200:
+            return None
         result_json = json.loads(result.content)
         articles = result_json["articles"]
         all_articles = []
@@ -43,3 +46,16 @@ class GetNewsData:
             )
 
         return all_articles
+
+    def return_news(self):
+        if self.get_news() is not None:
+            table = Table("tite", "author", "url")
+            for x in self.get_news():
+                table.add_row(
+                    x.title,
+                    x.author,
+                    x.url
+                )
+            return table
+        else:
+            return "Invalid country code"

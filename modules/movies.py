@@ -17,6 +17,12 @@ class MovieData:
     release_date: str
 
 
+@dataclass
+class MovieTrailersData:
+    name: str 
+    key: str 
+
+
 class Search:
     """ This class allows to get movie ID """
 
@@ -107,6 +113,7 @@ class RecommendationShows:
             table = Table("title", "release_date", "poster")
             for data in self._get_similar_shows():
                 table.add_row(
+                    str(data.id),
                     data.title,
                     data.release_date,
                     f"https://image.tmdb.org/t/p/original{data.poster}"
@@ -114,3 +121,46 @@ class RecommendationShows:
             return table
         else:
             return "Invalid movie title"
+
+
+class MovieTrailers:
+    def __init__(self, id: int):
+        self.api_key = os.getenv("MOVIE_API_KEY")
+        self.id = id
+        self.base_url = "https://api.themoviedb.org/3/movie/"
+        self.youtube_url = "https://www.youtube.com/watch?v="
+    
+    def _search_for_trailer(self):
+        all_results = []
+        response = get(
+            f"{self.base_url}{self.id}/videos?api_key={self.api_key}"
+        )
+        if response.status_code != 200:
+            return None
+        json_result = json.loads(response.content)
+        all_results.extend(json_result['results'])
+        return all_results
+
+    def _get_trailers_data(self):
+        all_trailers = []
+        for trailer in self._search_for_trailer():
+            trailer_data = MovieTrailersData(
+                name=trailer['name'],
+                key=trailer['key']
+            )
+            all_trailers.append(trailer_data)
+        return all_trailers
+    
+    def return_trailers(self):
+        if self._get_trailers_data() is not None:
+            table = Table("name", "key")
+            for data in self._get_trailers_data():
+                table.add_row(
+                    data.name,
+                    self.youtube_url + data.key
+                )
+            return table
+        else:
+            return "Invalid movie title"
+        
+        

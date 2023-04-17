@@ -4,7 +4,8 @@ from modules.weather import GetWeatherData
 from rich.console import Console
 from modules.news import GetNewsData
 from modules.exchange import GetExchangeRates
-from modules.movies import RecommendationShows
+from modules.movies import RecommendationShows, MovieTrailers
+
 
 app = typer.Typer(
     name="Desktop Assistant CLI",
@@ -57,6 +58,18 @@ def show(
 ):
     show_data = RecommendationShows(title, show_type)
     console.print(show_data.return_show_data())
+
+
+@app.command(
+    help="Returns a movie trailer"
+)
+def trailers(
+        id: int = typer.Option(..., help="Show id"),
+):
+    trailer_data = MovieTrailers(id)
+    console.print(trailer_data.return_trailers())
+
+
 
 
 if __name__ == "__main__":

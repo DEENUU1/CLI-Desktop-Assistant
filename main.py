@@ -7,6 +7,7 @@ from modules.exchange import GetExchangeRates
 from modules.movies import RecommendationShows, MovieTrailers, Search
 from modules.quotes import RandomQuotes
 from modules.nasa import NasaAPOD
+from modules.youtube import YoutubeDownloader
 
 
 app = typer.Typer(
@@ -81,6 +82,22 @@ def quote():
 def nasa():
     nasa_image = NasaAPOD()
     console.print(nasa_image.return_image_data())
+
+@app.command(help="Download youtube video or song")
+def youtube_downloader(
+    url: str = typer.Option(..., help="Youtube url"),
+    type: str = typer.Option(..., help="Type of download video or audio"),
+):
+    downloader = YoutubeDownloader(url)
+    console.print(downloader.download_file(type))
+
+@app.command(help="Return youtube video thumbnail")
+def youtube_thumbnail(
+    url: str = typer.Option(..., help="Youtube url"),
+):
+    thumbnail = YoutubeDownloader(url).return_video_thumbnail()
+    console.print(thumbnail)
+
 
 if __name__ == "__main__":
     app()

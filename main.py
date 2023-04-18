@@ -6,6 +6,7 @@ from modules.news import GetNewsData
 from modules.exchange import GetExchangeRates
 from modules.movies import RecommendationShows, MovieTrailers, Search
 from modules.quotes import RandomQuotes
+from modules.nasa import NasaAPOD
 
 
 app = typer.Typer(
@@ -76,7 +77,10 @@ def quote():
     console.print(f'"{quote_data.return_random_quote()[0]}"',
                   "~~", quote_data.return_random_quote()[1] )
 
-
+@app.command(help="Returns NASA APOD")
+def nasa():
+    nasa_image = NasaAPOD()
+    console.print(nasa_image.return_image_data())
 
 if __name__ == "__main__":
     app()

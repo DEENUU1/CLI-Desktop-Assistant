@@ -17,7 +17,6 @@ class NewsData:
     Dataclass for news data
     """
     title: str
-    author: str
     url: str
 
 
@@ -36,25 +35,26 @@ class GetNewsData:
         all_articles = []
         for article in articles:
             title = article["title"]
-            author = article["author"]
             url = article["url"]
 
             all_articles.append(
                 NewsData(title=title,
-                         author=author,
-                         url=url)
+                         url=url
+                )
             )
 
         return all_articles
 
     def return_news(self):
         if self.get_news() is not None:
-            table = Table("tite", "author", "url")
-            for x in self.get_news():
+            table = Table(title=f"Popular news in {self.country_code}")
+            table.add_column("Title")
+            table.add_column("URL", style="cyan")
+            
+            for article in self.get_news():
                 table.add_row(
-                    x.title,
-                    x.author,
-                    x.url
+                    article.title,
+                    article.url,
                 )
             return table
         else:

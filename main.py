@@ -8,6 +8,7 @@ from modules.movies import RecommendationShows, MovieTrailers, Search
 from modules.quotes import RandomQuotes
 from modules.nasa import NasaAPOD
 from modules.youtube import YoutubeDownloader
+from modules.computer import return_pc_info
 
 
 app = typer.Typer(
@@ -102,7 +103,10 @@ def youtube_thumbnail(
     thumbnail = YoutubeDownloader(url).return_video_thumbnail()
     console.print(thumbnail)
 
-
+@app.command(help="Return computer info")
+def pc():
+    console.print(return_pc_info())
+    
 
 if __name__ == "__main__":
     app()

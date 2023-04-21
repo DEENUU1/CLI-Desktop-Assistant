@@ -24,8 +24,16 @@ class GetExchangeRates:
 
     def return_exchange_rate(self):
         if self._get_single_exchange_rate() is not None:
-            table = Table("code", "name", "rate")
-            table.add_row(self.code, self._get_single_exchange_rate().currency, str(self._get_single_exchange_rate().rate))
+            table = Table(title="Exchange rate")
+            table.add_column("code")
+            table.add_column("name")
+            table.add_column("rate [PLN]")
+
+            table.add_row(
+                self.code, 
+                self._get_single_exchange_rate().currency, 
+                str(self._get_single_exchange_rate().rate)
+            )
             return table
         else:
             return "Invalid token"
